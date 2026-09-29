@@ -1,0 +1,83 @@
+// =====================================================================
+// dax_measures.dax  |  Create a blank table called "_Measures" (Enter Data) and add these.
+// Model: fact_sales[date_key]        -> dim_date[date_key]
+//        fact_sales[product_key]     -> dim_product[product_key]
+//        fact_sales[salesperson_key] -> dim_salesperson[salesperson_key]
+//        fact_sales[region_key]      -> dim_region[region_key]
+//        fact_sales[channel_key]     -> dim_channel[channel_key]
+// All relationships: many-to-one, single direction (dimension filters fact).
+// Mark dim_date as the Date table using dim_date[full_date] (type = Date).
+// =====================================================================
+
+// ---------- Core KPIs ----------
+Total Revenue   = SUM ( fact_sales[net_revenue] )
+Gross Revenue   = SUM ( fact_sales[gross_revenue] )
+Total Discount  = SUM ( fact_sales[discount_amount] )
+Total Orders    = DISTINCTCOUNT ( fact_sales[order_id] )
+Units Sold      = SUM ( fact_sales[quantity] )
+
+Avg Order Value = DIVIDE ( [Total Revenue], [Total Orders] )
+Avg Units per Order = DIVIDE ( [Units Sold], [Total Orders] )
+Discount Rate % = DIVIDE ( [Total Discount], [Gross Revenue] )
+
+// ---------- Time intelligence ----------
+Revenue Prior Month =
+CALCULATE ( [Total Revenue], DATEADD ( dim_date[full_date], -1, MONTH ) )
+
+MoM Growth % =
+DIVIDE ( [Total Revenue] - [Revenue Prior Month], [Revenue Prior Month] )
+
+Revenue YTD = TOTALYTD ( [Total Revenue], dim_date[full_date] )
+
+Revenue Prior Quarter =
+CALCULATE ( [Total Revenue], DATEADD ( dim_date[full_date], -1, QUARTER ) )
+
+QoQ Growth % =
+DIVIDE ( [Total Revenue] - [Revenue Prior Quarter], [Revenue Prior Quarter] )
+
+// ---------- Share & ranking ----------
+Revenue Share % =
+DIVIDE ( [Total Revenue], CALCULATE ( [Total Revenue], ALLSELECTED () ) )
+
+Salesperson Rank =
+RANKX ( ALLSELECTED ( dim_salesperson[salesperson_name] ), [Total Revenue], , DESC, DENSE )
+
+Product Cumulative Revenue % =      // Pareto line: put product on axis, sorted by [Total Revenue] desc
+VAR CurrentRevenue = [Total Revenue]
+VAR AllProducts =
+    ADDCOLUMNS ( ALLSELECTED ( dim_product[product_name] ), "@Rev", [Total Revenue] )
+RETURN
+    DIVIDE (
+        SUMX ( FILTER ( AllProducts, [@Rev] >= CurrentRevenue ), [@Rev] ),
+        SUMX ( AllProducts, [@Rev] )
+    )
+
+Top Product =
+MAXX ( TOPN ( 1, ALLSELECTED ( dim_product[product_name] ), [Total Revenue] ), dim_product[product_name] )
+
+Top Region =
+MAXX ( TOPN ( 1, ALLSELECTED ( dim_region[region_name] ), [Total Revenue] ), dim_region[region_name] )
+
+// ---------- Customer & order mix ----------
+Returning Customer Revenue % =
+DIVIDE ( CALCULATE ( [Total Revenue], fact_sales[customer_type] = "Returning" ), [Total Revenue] )
+
+New Customer Revenue =
+CALCULATE ( [Total Revenue], fact_sales[customer_type] = "New" )
+
+Large Orders (>3x AOV) =
+VAR Threshold = 3 * CALCULATE ( [Avg Order Value], ALL ( fact_sales ) )
+RETURN CALCULATE ( [Total Orders], FILTER ( fact_sales, fact_sales[net_revenue] > Threshold ) )
+
+Large Order Revenue % =
+VAR Threshold = 3 * CALCULATE ( [Avg Order Value], ALL ( fact_sales ) )
+RETURN DIVIDE ( CALCULATE ( [Total Revenue], FILTER ( fact_sales, fact_sales[net_revenue] > Threshold ) ), [Total Revenue] )
+
+// ---------- Presentation helpers ----------
+MoM Indicator =
+VAR g = [MoM Growth %]
+RETURN IF ( ISBLANK ( g ), "-", IF ( g >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( g ), "0.0%" ) )
+
+MoM Color = IF ( [MoM Growth %] >= 0, "#12B5A5", "#E5484D" )    // use in Conditional formatting > Field value
+
+Region Title = "Revenue | " & SELECTEDVALUE ( dim_region[region_name], "All regions" )

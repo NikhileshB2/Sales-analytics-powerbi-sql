@@ -1,0 +1,33 @@
+{
+  "name": "Sales Navy-Teal",
+  "dataColors": ["#1F6FEB", "#12B5A5", "#F5A623", "#7C5CFC", "#3DB2FF", "#E5484D", "#8B9BB4", "#2E8B57"],
+  "background": "#FFFFFF",
+  "foreground": "#1B2A41",
+  "tableAccent": "#0B1F3A",
+  "good": "#12B5A5",
+  "neutral": "#F5A623",
+  "bad": "#E5484D",
+  "maximum": "#1F6FEB",
+  "center": "#F5A623",
+  "minimum": "#DDE8FB",
+  "textClasses": {
+    "callout": { "fontSize": 28, "fontFace": "Segoe UI Semibold", "color": "#0B1F3A" },
+    "title":   { "fontSize": 12, "fontFace": "Segoe UI Semibold", "color": "#0B1F3A" },
+    "header":  { "fontSize": 12, "fontFace": "Segoe UI Semibold", "color": "#0B1F3A" },
+    "label":   { "fontSize": 10, "fontFace": "Segoe UI", "color": "#5B6B85" }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "title": [{ "show": true, "fontColor": { "solid": { "color": "#0B1F3A" } }, "fontSize": 12, "fontFamily": "Segoe UI Semibold" }],
+        "background": [{ "show": true, "color": { "solid": { "color": "#FFFFFF" } }, "transparency": 0 }],
+        "border": [{ "show": true, "color": { "solid": { "color": "#E3E8F1" } }, "radius": 8 }]
+      }
+    },
+    "page": {
+      "*": {
+        "background": [{ "color": { "solid": { "color": "#F4F6FA" } }, "transparency": 0 }]
+      }
+    }
+  }
+}

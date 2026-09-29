@@ -1,0 +1,29 @@
+product_key,product_name,category,avg_price,price_tier
+1,Keyboard,Accessories,58.67,Budget
+2,Laptop Stand,Accessories,34.38,Budget
+3,Mouse Pad,Accessories,13.58,Budget
+4,USB-C Hub,Accessories,49.76,Budget
+5,Webcam,Accessories,72.32,Budget
+6,Wireless Mouse,Accessories,40.76,Budget
+7,All-in-One PC,Computers,2720.25,Premium
+8,Desktop Mini,Computers,1629.66,Premium
+9,Gaming Laptop,Computers,3765.35,Premium
+10,Laptop Air 13,Computers,2248.2,Premium
+11,Laptop Pro 14,Computers,2912.52,Premium
+12,24-inch Monitor,Monitors,529.46,Mid-range
+13,27-inch Monitor,Monitors,763.45,Mid-range
+14,Portable Monitor,Monitors,633.23,Mid-range
+15,Ultrawide Monitor,Monitors,1361.77,Premium
+16,Ethernet Cable,Networking,18.08,Budget
+17,Mesh Wi-Fi Set,Networking,677.33,Mid-range
+18,Network Switch,Networking,163.11,Mid-range
+19,Wi-Fi Router,Networking,252.76,Mid-range
+20,Desk Organizer,Office Supplies,31.58,Budget
+21,Notebook Set,Office Supplies,22.64,Budget
+22,Pen Pack,Office Supplies,10.85,Budget
+23,Printer Paper,Office Supplies,16.35,Budget
+24,Sticky Notes,Office Supplies,7.26,Budget
+25,External HDD 2TB,Storage,289.78,Mid-range
+26,External SSD 1TB,Storage,404.75,Mid-range
+27,Memory Card 256GB,Storage,81.67,Budget
+28,USB Drive 128GB,Storage,54.03,Budget
